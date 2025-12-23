@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-PATH_EPI2 = r"C:\Users\gshaf\OneDrive\Documents\Semester 5\Epidemiologi\dashboard uas dan uts\UAS_Dashboard\epi2_ukuran.xlsx"
 
+BASE_DIR = Path(__file__).resolve().parent
+PATH_EPI2 = BASE_DIR / "epi1_modeling.xlsx"
 @st.cache_data
 def load_epi2(path: str):
     df = pd.read_excel(path)
@@ -405,7 +406,10 @@ elif page == "Peta Sebaran":
     # =========================
     # 2) LOAD GEOJSON LOKAL
     # =========================
-    GEO_PATH = "C:\\Users\\gshaf\\OneDrive\\Documents\\Semester 5\\Epidemiologi\\dashboard uas dan uts\\indonesia.geojson"
+    from pathlib import Path
+
+    BASE_DIR = Path(__file__).resolve().parent
+    GEO_PATH = BASE_DIR / "data" / "indonesia.geojson"
 
     @st.cache_data(show_spinner=False)
     def load_geojson_local(path: str):
@@ -1000,3 +1004,4 @@ elif page == "About":
         unsafe_allow_html=True
 
     )
+
