@@ -947,7 +947,7 @@ def load_data():
 
     pass
 
-elif page == "About":
+if page == "About":
     st.markdown(
         """
         <div class="card">
@@ -1001,3 +1001,4 @@ elif page == "About":
         """,
         unsafe_allow_html=True
     )
+
