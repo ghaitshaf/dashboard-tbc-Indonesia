@@ -946,7 +946,6 @@ def load_data():
         unsafe_allow_html=True
     )
 
-
 elif page == "About":
     st.markdown(
         """
@@ -1000,8 +999,8 @@ elif page == "About":
         </div>
         """,
         unsafe_allow_html=True
-
     )
+
 
 
 
