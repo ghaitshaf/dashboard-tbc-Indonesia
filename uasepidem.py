@@ -35,8 +35,8 @@ st.set_page_config(
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 
-PATH_EPI2 = DATA_DIR / "epi2_ukuran.xlsx"
-PATH_MODEL = DATA_DIR / "epi1_modeling.xlsx"
+PATH_EPI2 = DATA_DIR / "epi2_ukuran"
+PATH_MODEL = DATA_DIR / "epi1_modeling"
 PATH_GEO = DATA_DIR / "indonesia.geojson"
 
 
@@ -853,3 +853,4 @@ elif page == "About":
         """,
         unsafe_allow_html=True
     )
+
