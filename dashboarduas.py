@@ -6,7 +6,7 @@ import json
 
 
 @st.cache_data
-def load_data()
+def load_data():
     df = pd.read_excel(epi2_ukuran.xlsx)
 
     # ==== BERSIHKAN NAMA KOLOM DULU ====
@@ -775,7 +775,7 @@ elif page == "Model":
     # 0) LOAD DATA (MODEL)
     # =========================
 @st.cache_data
-def load_data()
+def load_data():
     df = pd.read_excel(epi1_modeling.xlsx)
 
     df = df.rename(columns={
@@ -1002,6 +1002,7 @@ elif page == "About":
         unsafe_allow_html=True
 
     )
+
 
 
 
