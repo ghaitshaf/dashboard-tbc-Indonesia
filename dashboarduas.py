@@ -68,6 +68,53 @@ def load_data(path):
 # Pastikan PATH_EPI2 sudah didefinisikan SEBELUM baris ini
 epi2 = load_data(PATH_EPI2)
 
+
+
+BASE_DIR = Path(__file__).resolve().parent
+PATH_EPI1 = BASE_DIR / "epi1_modeling.xlsx"   # pastikan file ada di repo
+@st.cache_data(show_spinner=False)
+def load_epi1_model(path):
+    df = pd.read_excel(path)
+
+    # bersihin nama kolom
+    df.columns = df.columns.astype(str).str.strip()
+
+    # rename ke standar (tahan variasi)
+    rename_map = {
+        "Provinsi": "provinsi",
+        "provinsii": "provinsi",
+        "Provinsii": "provinsi",
+        "provinsi": "provinsi",
+
+        "Y": "y", "y": "y",
+        "X1": "x1", "x1": "x1",
+        "X2": "x2", "x2": "x2",
+        "X3": "x3", "x3": "x3",
+        "X4": "x4", "x4": "x4",
+        "X5": "x5", "x5": "x5",
+    }
+    df = df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns})
+
+    # validasi kolom wajib
+    required = ["provinsi", "y", "x1", "x2", "x3", "x4", "x5"]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise ValueError(f"Kolom wajib tidak ditemukan: {missing}. Kolom terbaca: {list(df.columns)}")
+
+    # numeric
+    for c in ["y", "x1", "x2", "x3", "x4", "x5"]:
+        df[c] = pd.to_numeric(df[c], errors="coerce")
+
+    # bersihin provinsi
+    df["provinsi"] = df["provinsi"].astype(str).str.strip()
+
+    # drop NA
+    df = df.dropna(subset=["y", "x1", "x2", "x3", "x4", "x5"]).copy()
+
+    return df
+
+
+
 # =========================
 # CONFIG (WAJIB PALING ATAS)
 # =========================
@@ -793,26 +840,25 @@ elif page == "Model":
     import statsmodels.formula.api as smf
     from scipy.stats import chi2
 
+
     # =========================
     # 0) LOAD DATA (MODEL)
     # =========================
-@st.cache_data
-def load_data():
-    df = pd.read_excel(epi1_modeling.xlsx)
+    try:
+        df = load_epi1_model(PATH_EPI1).copy()
+    except Exception as e:
+        st.error(f"Gagal load epi1_modeling.xlsx: {e}")
+        st.stop()
 
-    df = df.rename(columns={
-        "Provinsi": "provinsi",
-        "Y": "y",
-        "X1": "x1",
-        "X2": "x2",
-        "X3": "x3",
-        "X4": "x4",
-        "X5": "x5",
-    })
+    st.markdown('<div class="card"><div class="card-title">Data Modeling</div>'
+                '<div class="muted">Tabel 1 (38 prov): Y (kasus TBC) dan X1–X5</div></div>',
+                unsafe_allow_html=True)
+    st.write("")
+    st.dataframe(df, use_container_width=True)
 
-    for c in ["y","x1","x2","x3","x4","x5"]:
-        df[c] = pd.to_numeric(df[c], errors="coerce")
-    df = df.dropna(subset=["y","x1","x2","x3","x4","x5"]).copy()
+    # (lanjut di bawah sini: fitting Negative Binomial, IRR, dsb)
+
+
 
     # =========================
     # 1) POISSON baseline + overdisp (Pearson)
@@ -1024,6 +1070,7 @@ if page == "About":
         """,
         unsafe_allow_html=True
     )
+
 
 
 
