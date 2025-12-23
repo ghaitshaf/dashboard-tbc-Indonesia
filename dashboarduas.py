@@ -3,13 +3,19 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import json
+from pathlib import Path
 
 
-@st.cache_data
-def load_data():
-    df = pd.read_excel(epi2_ukuran.xlsx)
+BASE_DIR = Path(__file__).resolve().parent
+PATH_EPI2 = BASE_DIR / "epi2_ukuran.xlsx"
 
-    # ==== BERSIHKAN NAMA KOLOM DULU ====
+
+
+@st.cache_data(show_spinner=False)
+def load_data(path):
+    df = pd.read_excel(path)
+
+    # ==== BERSIHKAN NAMA KOLOM ====
     df.columns = (
         df.columns
         .astype(str)
@@ -21,28 +27,45 @@ def load_data():
     rename_map = {
         "provinsii": "provinsi",
         "provinsi": "provinsi",
+
         "jumlah_tbc": "jumlah_tbc",
-        "jumlah tbc": "jumlah_tbc"
+        "jumlah tbc": "jumlah_tbc",
+        "jumlah_kasus_tbc": "jumlah_tbc",
+
+        "kepadatan": "kepadatan",
+        "kepadatan penduduk": "kepadatan",
+
+        "kelompok_kep": "kelompok_kep",
+        "kelompok kep": "kelompok_kep",
+        "kelompok_kepadatan": "kelompok_kep",
     }
-    df = df.rename(columns=rename_map)
+    df = df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns})
 
     # ==== VALIDASI KOLOM WAJIB ====
     required_cols = ["provinsi", "populasi", "jumlah_tbc"]
     missing = [c for c in required_cols if c not in df.columns]
     if missing:
-        raise ValueError(f"Kolom wajib tidak ditemukan: {missing}")
+        raise ValueError(
+            f"Kolom wajib tidak ditemukan: {missing}. "
+            f"Kolom terbaca: {list(df.columns)}"
+        )
 
-    # ==== PASTIKAN NUMERIK ====
+    # ==== KONVERSI NUMERIK ====
     for c in ["populasi", "jumlah_tbc", "kepadatan"]:
         if c in df.columns:
             df[c] = pd.to_numeric(df[c], errors="coerce")
 
-    # ==== BERSIHKAN ISI PROVINSI ====
+    # ==== BERSIHKAN NAMA PROVINSI ====
     df["provinsi"] = df["provinsi"].astype(str).str.strip()
+
+    # ==== NON-TBC (UNTUK PR / POR) ====
+    df["non_tbc"] = df["populasi"] - df["jumlah_tbc"]
 
     return df
 
 
+
+# Pastikan PATH_EPI2 sudah didefinisikan SEBELUM baris ini
 epi2 = load_epi2(PATH_EPI2)
 
 # =========================
@@ -1001,4 +1024,5 @@ if page == "About":
         """,
         unsafe_allow_html=True
     )
+
 
