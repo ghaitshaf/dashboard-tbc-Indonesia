@@ -219,7 +219,6 @@ st.write("")
 # =========================
 page = st.session_state.page
 
-# ===== HOME =====
 if page == "Home":
 
     df = epi2.dropna(subset=["provinsi", "populasi", "jumlah_tbc"]).copy()
@@ -363,8 +362,7 @@ if page == "Home":
             unsafe_allow_html=True
         )
 
-
-
+    pass
 
 elif page == "Peta Sebaran":
     import json
@@ -515,6 +513,7 @@ elif page == "Peta Sebaran":
     st_folium(m, use_container_width=True, height=560)
 
 
+    pass
 
 elif page == "Epi":
     import numpy as np
@@ -762,7 +761,7 @@ elif page == "Epi":
         unsafe_allow_html=True
     )
 
-
+    pass
 
 elif page == "Model":
     import numpy as np
@@ -946,6 +945,8 @@ def load_data():
         unsafe_allow_html=True
     )
 
+    pass
+
 elif page == "About":
     st.markdown(
         """
@@ -1000,8 +1001,3 @@ elif page == "About":
         """,
         unsafe_allow_html=True
     )
-
-
-
-
-
