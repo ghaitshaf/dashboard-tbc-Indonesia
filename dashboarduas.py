@@ -769,7 +769,11 @@ elif page == "Model":
     # =========================
     # 0) LOAD DATA (MODEL)
     # =========================
-    path_model = r"C:\Users\gshaf\OneDrive\Documents\Semester 5\Epidemiologi\dashboard uas dan uts\UAS_Dashboard\epi1_modeling.xlsx"
+    from pathlib import Path
+
+    BASE_DIR = Path(__file__).resolve().parent
+    path_model = BASE_DIR / "epi1_modeling.xlsx"
+
     df = pd.read_excel(path_model).copy()
 
     df = df.rename(columns={
@@ -994,4 +998,5 @@ elif page == "About":
         </div>
         """,
         unsafe_allow_html=True
+
     )
