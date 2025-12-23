@@ -66,7 +66,7 @@ def load_data(path):
 
 
 # Pastikan PATH_EPI2 sudah didefinisikan SEBELUM baris ini
-epi2 = load_epi2(PATH_EPI2)
+epi2 = load_data(PATH_EPI2)
 
 # =========================
 # CONFIG (WAJIB PALING ATAS)
@@ -1024,5 +1024,6 @@ if page == "About":
         """,
         unsafe_allow_html=True
     )
+
 
 
