@@ -5,11 +5,9 @@ from pathlib import Path
 import json
 
 
-BASE_DIR = Path(__file__).resolve().parent
-PATH_EPI2 = BASE_DIR / "epi1_modeling.xlsx"
 @st.cache_data
-def load_epi2(path: str):
-    df = pd.read_excel(path)
+def load_data()
+    df = pd.read_excel(epi2_ukuran.xlsx)
 
     # ==== BERSIHKAN NAMA KOLOM DULU ====
     df.columns = (
@@ -412,7 +410,7 @@ elif page == "Peta Sebaran":
     from pathlib import Path
 
     BASE_DIR = Path(__file__).resolve().parent
-    GEO_PATH = BASE_DIR / "data" / "indonesia.geojson"
+    GEO_PATH = BASE_DIR / "indonesia.geojson"
 
     @st.cache_data(show_spinner=False)
     def load_geojson_local(path: str):
@@ -776,12 +774,9 @@ elif page == "Model":
     # =========================
     # 0) LOAD DATA (MODEL)
     # =========================
-    from pathlib import Path
-
-    BASE_DIR = Path(__file__).resolve().parent
-    path_model = BASE_DIR / "epi1_modeling.xlsx"
-
-    df = pd.read_excel(path_model).copy()
+@st.cache_data
+def load_data()
+    df = pd.read_excel(epi1_modeling.xlsx)
 
     df = df.rename(columns={
         "Provinsi": "provinsi",
@@ -1007,5 +1002,6 @@ elif page == "About":
         unsafe_allow_html=True
 
     )
+
 
 
